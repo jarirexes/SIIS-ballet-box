@@ -1,43 +1,52 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+import { VoterForm } from "@/components/VoterForm";
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+export default function HomePage() {
+  return (
+    <main className="flex-grow flex flex-col items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-background to-secondary">
+      <VoterForm />
+    </main>
+  );
+}
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+import type {Metadata} from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { Toaster } from "@/components/ui/toaster";
+import { AnimatedLogoBackground } from '@/components/AnimatedLogoBackground';
 
-jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+export const metadata: Metadata = {
+  title: 'BallotBox',
+  description: 'School Election Ballot App',
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className={inter.variable}>
+      <head>
+        {/* Font links are handled by next/font */}
+      </head>
+      <body className={`font-body antialiased min-h-screen flex flex-col`} suppressHydrationWarning={true}>
+        <AnimatedLogoBackground />
+        <div className="relative z-0 flex flex-col flex-1"> {/* Ensures content is above background and takes space */}
+          {children}
+        </div>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
